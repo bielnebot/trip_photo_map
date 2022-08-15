@@ -1,0 +1,10 @@
+{
+  "region": "New York",
+  "country": "United States",
+  "date_start": "2020-01-01",
+  "date_end": "2020-01-05",
+  "members": ["person1","person2", "person3"],
+  "latitude": 40.712776,
+  "longitude": -74.005974,
+  "rgb": [0, 0, 255]
+}

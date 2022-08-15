@@ -1,0 +1,10 @@
+{
+  "region": "Barcelona",
+  "country": "Spain",
+  "date_start": "2022-01-01",
+  "date_end": "2022-01-05",
+  "members": ["person1", "person2"],
+  "latitude": 41.385063,
+  "longitude": 2.173404,
+  "rgb": [255, 0, 0]
+}
