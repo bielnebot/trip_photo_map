@@ -82,7 +82,7 @@ Notes on the data provided:
 | Field                                  | Info                                                                                                     |
 |----------------------------------------|----------------------------------------------------------------------------------------------------------|
 | `region`, `country`, `location`        | Text to desplay in the app for each of the trips and locations.                                          |
-| `date_start`, `date_end`               | Trip duration so set the size the dots accordingly in the map and to display the year the trip was done. |
+| `date_start`, `date_end`               | Trip duration to set the size the dots accordingly in the map and to display the year the trip was done. |
 | `members`                              | Members that came to the trip to apply filters later on.                                                 |
 | `latitude`, `longitude`, `rgb`, `zoom` | Location and colour of the dots and default map zoom.                                                    |
 
