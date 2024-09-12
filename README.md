@@ -86,6 +86,8 @@ Notes on the data provided:
 | `latitude`, `longitude`, `rgb`, `zoom` | Location and colour of the dots and default map zoom.                                                    |
 
 
+## Other
+
 If needed, one more deeper level of hierarchy is possible. For it, organise your files like this:
 <pre>
 ├── 📁trip_1
