@@ -6,5 +6,6 @@
   "members": ["person1","person2", "person3"],
   "latitude": 40.712776,
   "longitude": -74.005974,
-  "rgb": [0, 0, 255]
+  "rgb": [0, 0, 255],
+  "zoom": 10
 }

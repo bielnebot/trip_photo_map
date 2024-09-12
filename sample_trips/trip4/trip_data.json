@@ -1,0 +1,11 @@
+{
+  "region": "Northern Egypt",
+  "country": "Egypt",
+  "date_start": "2020-01-01",
+  "date_end": "2020-01-15",
+  "members": ["person1","person2", "person3"],
+  "latitude": 30.907210151619736,
+  "longitude": 31.12763242666425,
+  "rgb": [255, 0, 255],
+  "zoom": 7
+}
