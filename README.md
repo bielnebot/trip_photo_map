@@ -1,4 +1,5 @@
 ![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)
+
 [showcase_video.webm](https://github.com/user-attachments/assets/0792b36e-2650-4c01-8642-552fa1f78860)
 # Trip photo map
 This repository contains a [Streamlit](https://streamlit.io/) app to visualize and interact with a directory structure of images classified by location, ideal to showcase trips.
