@@ -63,12 +63,10 @@ st.set_page_config(page_title="Trip photo map", page_icon="🌎", layout="wide",
 side_bar_image = "side_bar_image" if "trips" in os.listdir() else "sample_side_bar_image"
 st.sidebar.image(f"utils/{side_bar_image}.jpg")
 st.sidebar.title("Whose?")
-chosen_member = st.sidebar.radio("Choose a person:", list(set_persons) + ["Both", "All"])
+chosen_member = st.sidebar.radio("Choose a person:", list(set_persons) + ["All"])
 
 if chosen_member == "All":
     pass
-elif chosen_member == "Both":
-    df = df[(df["person1"] == True) & (df["person2"] == True)]
 else:
     df = df[df[chosen_member] == True]
 
