@@ -6,12 +6,11 @@ from utils.trips_dataframe import generate_trips_df
 import random
 
 
-def plot_images_and_videos(images_current_location, uri):
+def display_media(images_current_location, uri):
     """
-    Plots the images and videos of
+    Displays the images, videos and audios
     :param images_current_location: list of the files of the current directory
     :param uri: tuple with the directory structure to the current location
-    :return:
     """
 
     if len(uri) == 2:
@@ -25,32 +24,35 @@ def plot_images_and_videos(images_current_location, uri):
     current_working_directory = os.getcwd()
     main_trip_directory = "trips" if "trips" in os.listdir() else "sample_trips"
     st.write(f"{len(images_current_location)} files")
-    for img in images_current_location:
-        single_image = f"{current_working_directory}\\{main_trip_directory}\\{half_way_uri}\\{img}"
 
-        is_video = False
-        if img.endswith("mp4") or img.endswith("MP4"):
-            is_video = True
+    # Iterate over every file
+    for file in images_current_location:
+        file_i = f"{current_working_directory}\\{main_trip_directory}\\{half_way_uri}\\{file}"
 
-        if is_video:
-            video_file = open(single_image, "rb")
+        # If it's video
+        if file.endswith("mp4") or file.endswith("MP4"):
+            video_file = open(file_i, "rb")
             video_bytes = video_file.read()
             st.video(video_bytes)
+        # If it's audio
+        elif file.endswith("mp3") or file.endswith("MP3"):
+            st.audio(file_i, format="audio/mp3")
+        # If it's image
         else:
-            image_file = Image.open(single_image)
+            image_file = Image.open(file_i)
             image_file = ImageOps.exif_transpose(image_file)
             st.image(image_file)
 
-            # Custom caption
-            caption_text = img.rsplit(".", maxsplit=1)[0]
-            font_color = "black"
-            font_size = 24
-            caption_html = f"""
-                <div style='text-align: center;'>
-                    <p style='color: {font_color}; font-size: {font_size}px; '>{caption_text}</p>
-                </div>
-            """
-            st.markdown(caption_html, unsafe_allow_html=True)
+        # Custom caption
+        caption_text = file.rsplit(".", maxsplit=1)[0]
+        font_color = "black"
+        font_size = 24
+        caption_html = f"""
+            <div style='text-align: center;'>
+                <p style='color: {font_color}; font-size: {font_size}px; '>{caption_text}</p>
+            </div>
+        """
+        st.markdown(caption_html, unsafe_allow_html=True)
 
 
 # Read files
@@ -179,6 +181,7 @@ else:
             else:
                 sub_location_directory_name = label_text_to_location_directory[trip_directory_name][location_directory_name][chosen_sub_location]
                 images_current_location = dict_images[trip_directory_name][location_directory_name][sub_location_directory_name]
-                plot_images_and_videos(images_current_location,(trip_directory_name,location_directory_name,sub_location_directory_name))
+                display_media(images_current_location,
+                              (trip_directory_name, location_directory_name, sub_location_directory_name))
         else:
-            plot_images_and_videos(images_current_location,(trip_directory_name,location_directory_name))
+            display_media(images_current_location, (trip_directory_name, location_directory_name))
