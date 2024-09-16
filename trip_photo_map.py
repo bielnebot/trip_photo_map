@@ -30,7 +30,7 @@ def display_media(images_current_location, uri):
         file_i = f"{current_working_directory}\\{main_trip_directory}\\{half_way_uri}\\{file}"
 
         # If it's video
-        if file.endswith("mp4") or file.endswith("MP4"):
+        if file.endswith("mp4") or file.endswith("MP4") or file.endswith("MOV") or file.endswith("mov"):
             video_file = open(file_i, "rb")
             video_bytes = video_file.read()
             st.video(video_bytes)
