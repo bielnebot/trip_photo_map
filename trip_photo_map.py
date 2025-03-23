@@ -6,9 +6,10 @@ from utils.trips_dataframe import generate_trips_df
 import random
 
 
-def display_media(images_current_location, uri):
+def display_media(random_order, images_current_location, uri):
     """
     Displays the images, videos and audios
+    :param random_order: bool
     :param images_current_location: list of the files of the current directory
     :param uri: tuple with the directory structure to the current location
     """
@@ -20,7 +21,8 @@ def display_media(images_current_location, uri):
         trip_directory_name, location_directory_name, sub_location_directory_name = uri
         half_way_uri = f"{trip_directory_name}\\{location_directory_name}\\{sub_location_directory_name}"
 
-    random.shuffle(images_current_location)
+    if random_order:
+        random.shuffle(images_current_location)
     current_working_directory = os.getcwd()
     main_trip_directory = "trips" if "trips" in os.listdir() else "sample_trips"
     st.write(f"{len(images_current_location)} files")
@@ -73,7 +75,7 @@ else:
     df = df[df[chosen_member] == True]
 
 skip_first_level = st.sidebar.checkbox("Show sub-locations")
-
+random_order = st.sidebar.checkbox("Randomise order")
 # Build a df with the sub-locations for the skip_first_level mode
 first_level_points = None
 for label_text_i in df["label_text"]:
@@ -201,7 +203,7 @@ else:
             else:
                 sub_location_directory_name = label_text_to_location_directory[trip_directory_name][location_directory_name][chosen_sub_location]
                 images_current_location = dict_images[trip_directory_name][location_directory_name][sub_location_directory_name]
-                display_media(images_current_location,
+                display_media(random_order, images_current_location,
                               (trip_directory_name, location_directory_name, sub_location_directory_name))
         else:
-            display_media(images_current_location, (trip_directory_name, location_directory_name))
+            display_media(random_order, images_current_location, (trip_directory_name, location_directory_name))
