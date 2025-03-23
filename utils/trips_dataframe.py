@@ -41,11 +41,13 @@ def transform_trips_df(trips_df):
     return trips_df.join(pd.DataFrame(d))
 
 
-def transform_locations_df(locations_df, trip_rgb, zoom=None):
+def transform_locations_df(locations_df, trip_rgb, trip_directory, zoom=None):
     """
     Adds two columns to the locations_df (the colour and the point size)
+    It also adds a column with the parent trip directory
     :param locations_df:
     :param trip_rgb:
+    :param trip_directory:
     :return:
     """
     # locations_df["date"] = locations_df["date"].apply(lambda x: datetime.datetime.strptime(x, "%Y-%m-%d").date())
@@ -53,6 +55,7 @@ def transform_locations_df(locations_df, trip_rgb, zoom=None):
     locations_df["point_size"] = 4
     if zoom:
         locations_df["zoom"] = zoom
+    locations_df["trip_directory"] = trip_directory
     return locations_df
 
 
@@ -155,7 +158,7 @@ def generate_trips_df():
                     list_of_images.remove("location_data.json")
                     dict_images[trip][location][sub_location] = list_of_images
 
-                dict_sub_locations_df[trip][location] = transform_locations_df(pd.DataFrame(list_data_sub_locations), current_trip_data["rgb"], current_location_data["zoom"])
+                dict_sub_locations_df[trip][location] = transform_locations_df(pd.DataFrame(list_data_sub_locations), current_trip_data["rgb"], trip, current_location_data["zoom"])
             else:
                 label_text_to_location_directory[trip][current_location_data["location"]] = location
                 # List of images of that trip
@@ -164,7 +167,7 @@ def generate_trips_df():
                 dict_images[trip][location] = list_of_images
 
         # df of the locations in each trip
-        dict_locations_df[trip] = transform_locations_df(pd.DataFrame(list_data_locations), current_trip_data["rgb"])
+        dict_locations_df[trip] = transform_locations_df(pd.DataFrame(list_data_locations), current_trip_data["rgb"], trip)
 
     df_trips = transform_trips_df(pd.DataFrame(list_data_trips))
     set_persons = set(df_trips["members"].sum())
