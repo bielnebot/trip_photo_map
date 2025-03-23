@@ -74,7 +74,7 @@ else:
 
 skip_first_level = st.sidebar.checkbox("Show sub-locations")
 
-# Build a df with the sub-locations
+# Build a df with the sub-locations for the skip_first_level mode
 first_level_points = None
 for label_text_i in df["label_text"]:
     rows_i = dict_locations_df[label_text_to_trip_directory[label_text_i]]
@@ -111,90 +111,25 @@ if not skip_first_level:
     if len(event_data["selection"]["points"]) == 1:
         chosen_trip = event_data["selection"]["points"][0]["hovertext"]
     st.write(f"## {chosen_trip}")
+else:
+    chosen_trip = None
 # Dropdown select (old)
 # chosen_trip = st.selectbox("Choose a trip:", ["No trip selected"] + list(df["label_text"].sort_values()))
 
 # Location (2nd level)
-if skip_first_level:
-    fig = px.scatter_mapbox(first_level_points,
-                            lat="latitude",
-                            lon="longitude",
-                            color="rgb",
-                            size="point_size",
-                            hover_name="location",
-                            hover_data={"location": False, "latitude": False, "longitude": False, "point_size": False},
-                            custom_data=["trip_directory"],
-                            height=500,
-                            # width=600,
-                            zoom=2.7,
-                            color_discrete_map="identity"
-                            )
-    fig.update_traces(hoverlabel=dict(font_size=20, font_color="black", bgcolor="white"))
-    fig.update_layout(mapbox_style="open-street-map")
-    # st.plotly_chart(fig, use_container_width=True)
-
-    chosen_location = "No location selected"
-    # Interactive click
-    event_data = st.plotly_chart(fig, on_select="rerun")
-    # st.write(event_data)
-    if len(event_data["selection"]["points"]) == 1:
-        # st.write(event_data)
-        chosen_location = event_data["selection"]["points"][0]["hovertext"]
-        trip_directory_name = event_data["selection"]["points"][0]["customdata"][0]
-
-        location_directory_name = label_text_to_location_directory[trip_directory_name][chosen_location]
-        images_current_location = dict_images[trip_directory_name][location_directory_name]
-
-        if isinstance(images_current_location, dict):  # <-> if has sub-locations
-            # Show sub-locations
-            df_current_location = dict_sub_locations_df[trip_directory_name][location_directory_name]
-            list_of_sub_locations = [f"`{i}`" for i in df_current_location["location"]]
-            st.write(f"({len(df_current_location)})" + ", ".join(list_of_sub_locations))
-            fig = px.scatter_mapbox(df_current_location,
-                                    lat="latitude",
-                                    lon="longitude",
-                                    color="rgb",
-                                    size="point_size",
-                                    hover_name="location",
-                                    hover_data={"location": False, "latitude": False, "longitude": False,
-                                                "point_size": False},
-                                    # custom_data=["region"],
-                                    height=500,
-                                    # width=600,
-                                    zoom=df_current_location["zoom"][0],  # any row, column zoom
-                                    color_discrete_map="identity"
-                                    )
-            fig.update_traces(hoverlabel=dict(font_size=20, font_color="black", bgcolor="white"))
-            fig.update_layout(mapbox_style="open-street-map")
-
-            chosen_sub_location = "No sub-location selected"
-            # Interactive click
-            event_data = st.plotly_chart(fig, on_select="rerun")
-            # st.write(event_data)
-            if len(event_data["selection"]["points"]) == 1:
-                chosen_sub_location = event_data["selection"]["points"][0]["hovertext"]
-
-            st.write(f"## {chosen_sub_location}")
-            if chosen_sub_location == "No sub-location selected":
-                pass
-            else:
-                sub_location_directory_name = \
-                label_text_to_location_directory[trip_directory_name][location_directory_name][chosen_sub_location]
-                images_current_location = dict_images[trip_directory_name][location_directory_name][
-                    sub_location_directory_name]
-                display_media(images_current_location,
-                              (trip_directory_name, location_directory_name, sub_location_directory_name))
-        else:
-            display_media(images_current_location, (trip_directory_name, location_directory_name))
-
-elif chosen_trip == "No trip selected":
+if chosen_trip == "No trip selected":
     pass
 else:
-    trip_directory_name = label_text_to_trip_directory[chosen_trip]
-    df_current_trip = dict_locations_df[trip_directory_name]
-    # st.dataframe(df_current_trip)
-    list_of_sub_locations = [f"`{i}`" for i in df_current_trip["location"]]
-    st.write(f"({len(df_current_trip)})"+", ".join(list_of_sub_locations))
+    if not skip_first_level:
+        trip_directory_name = label_text_to_trip_directory[chosen_trip]
+        df_current_trip = dict_locations_df[trip_directory_name]
+        list_of_sub_locations = [f"`{i}`" for i in df_current_trip["location"]]
+        st.write(f"({len(df_current_trip)})"+", ".join(list_of_sub_locations))
+        df_current_trip = df_current_trip
+        zoom_level = int(df[df["label_text"] == chosen_trip]["zoom"])
+    else:
+        df_current_trip = first_level_points
+        zoom_level = 2.7
     fig = px.scatter_mapbox(df_current_trip,
                             lat="latitude",
                             lon="longitude",
@@ -202,10 +137,10 @@ else:
                             size="point_size",
                             hover_name="location",
                             hover_data={"location": False, "latitude": False, "longitude":False, "point_size": False},
-                            # custom_data=["region"],
+                            custom_data=["trip_directory"],
                             height=500,
                             # width=600,
-                            zoom=int(df[df["label_text"] == chosen_trip]["zoom"]),
+                            zoom=zoom_level,
                             color_discrete_map="identity"
                             )
     fig.update_traces(hoverlabel=dict(font_size=20, font_color="black", bgcolor="white"))
@@ -218,6 +153,8 @@ else:
     # st.write(event_data)
     if len(event_data["selection"]["points"]) == 1:
         chosen_location = event_data["selection"]["points"][0]["hovertext"]
+        if skip_first_level:
+            trip_directory_name = event_data["selection"]["points"][0]["customdata"][0]
 
     # Dropdown select (old)
     # chosen_location = st.selectbox("Choose a location:", ["No location selected"] + list(df_current_trip["location"].sort_values()))
